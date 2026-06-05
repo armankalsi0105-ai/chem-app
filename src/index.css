@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-hud-dark text-hud-text font-sans m-0 p-0 overflow-x-hidden;
+    /* subtle sci-fi grid background */
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-hud-panel backdrop-blur-md border border-hud-border rounded-xl shadow-lg relative overflow-hidden;
+  }
+
+  .glass-panel::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-hud-neon to-transparent opacity-30;
+  }
+
+  .neon-text {
+    @apply text-hud-neon drop-shadow-[0_0_8px_rgba(0,255,255,0.8)];
+  }
+
+  .hud-input {
+    @apply w-full bg-black/40 border border-hud-border text-hud-neon focus:border-hud-neon focus:ring-1 focus:ring-hud-neon focus:outline-none rounded-lg px-4 py-2 transition-all font-mono;
+  }
+
+  .hud-button {
+    @apply px-6 py-2 rounded-lg bg-black/40 border border-hud-neon text-hud-neon font-bold tracking-widest hover:bg-hud-neon/20 hover:shadow-neon transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
+
+/* Fix for input number arrows to match HUD theme */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
