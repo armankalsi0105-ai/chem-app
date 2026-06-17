@@ -1,16 +1,54 @@
-# React + Vite
+# The Zuck Soundboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fun, parody Mark Zuckerberg–style soundboard built with React + Vite + Tailwind.
 
-Currently, two official plugins are available:
+Tap a tile and a robotic "CEO" avatar speaks famous-sounding lines ("Senator, we
+run ads", "Welcome to the metaverse", "I must consume water to remain human") and
+fires off synthesized sound effects (beeps, whooshes, warps, airhorns, applause).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> Parody / satire. **No real audio recordings are used.** Every sound is generated
+> live in your browser, so the app ships with zero audio assets and works offline.
 
-## React Compiler
+## How it works
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Voice lines** use the browser's [Web Speech API](https://developer.mozilla.org/docs/Web/API/SpeechSynthesis)
+  (`speechSynthesis`) with a low pitch / slow rate for the deadpan robot vibe.
+- **Sound effects** are synthesized with the [Web Audio API](https://developer.mozilla.org/docs/Web/API/Web_Audio_API)
+  (oscillators + filtered noise) — see `src/utils/audioEngine.js`.
+- Sounds are defined declaratively in `src/data/sounds.js`, so adding a new tile is
+  just a new object (give it `text`, an `effect`, or both).
 
-## Expanding the ESLint configuration
+## Run it
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev      # start the dev server
+npm run build    # production build
+npm run lint     # lint
+```
+
+Then open the printed local URL and start tapping tiles.
+
+## Browser notes
+
+- Audio only starts after a user interaction (a tap) — this is a browser
+  autoplay policy, not a bug.
+- Voice lines require a browser that supports `speechSynthesis` (most modern
+  desktop/mobile browsers). If it's unavailable, the sound effects still play and
+  the UI shows a small notice.
+- Available voices vary by OS/browser, so the exact robot voice will differ
+  between devices.
+
+## Project structure
+
+```
+src/
+  data/sounds.js          # sound + voice-line definitions
+  utils/audioEngine.js    # Web Audio + Speech synthesis engine
+  components/
+    SoundButton.jsx       # a single soundboard tile
+    ZuckBot.jsx           # animated robotic avatar
+    Navbar.jsx
+  pages/Soundboard.jsx    # main screen
+  App.jsx
+```
