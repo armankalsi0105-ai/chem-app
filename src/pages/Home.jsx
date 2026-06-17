@@ -110,6 +110,11 @@ const getAudioContext = () => {
   return AudioContextClass ? new AudioContextClass() : null;
 };
 
+const deterministicNoiseSample = (index) => {
+  const raw = Math.sin((index + 1) * 12.9898) * 43758.5453;
+  return (raw - Math.floor(raw)) * 2 - 1;
+};
+
 export default function Home() {
   const audioContextRef = useRef(null);
   const masterGainRef = useRef(null);
@@ -182,7 +187,7 @@ export default function Home() {
     const data = buffer.getChannelData(0);
 
     for (let i = 0; i < bufferSize; i += 1) {
-      data[i] = Math.random() * 2 - 1;
+      data[i] = deterministicNoiseSample(i);
     }
 
     const source = context.createBufferSource();
@@ -294,8 +299,9 @@ export default function Home() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const randomizePhrase = () => {
-    const nextIndex = Math.floor(Math.random() * phrases.length);
+  const selectNextPhrase = () => {
+    const currentIndex = phrases.indexOf(selectedPhrase);
+    const nextIndex = (currentIndex + 1) % phrases.length;
     setSelectedPhrase(phrases[nextIndex]);
     setStatus('Phrase cartridge swapped.');
   };
@@ -459,8 +465,8 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              <button type="button" onClick={randomizePhrase} className="hud-button px-3">
-                Random
+              <button type="button" onClick={selectNextPhrase} className="hud-button px-3">
+                Next
               </button>
               <button
                 type="button"
